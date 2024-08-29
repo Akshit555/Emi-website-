@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- custom css file link  -->
+     <link rel="stylesheet" href="css/style.css">
+
+<style>
+/* google fonts cdn link  */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
+
+*{
+	font-family: "Montserrat", sans-serif;
+	margin: 0; padding: 0;
+	box-sizing: border-box;
+	outline: none; border: none;
+	text-transform: capitalize;
+	transition: .2s linear;
+}
+
+.container{
+	min-height: 100vh;
+	background: url('bg.jpg') no-repeat;
+	background-size: cover;
+	background-position: center;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+}
+
+.container .row{
+	width: 800px;
+	border-radius: 20px;
+	display: flex;
+	gap: 25px;
+	flex-wrap: wrap;
+	padding: 25px;
+	backdrop-filter: blur(8px);
+	border: 1px solid rgba(255,255,255,.5);
+	box-shadow: 0 5px 15px rgba(0,0,0,.1);
+}
+
+.container .row .box{
+	flex: 1 1 300px;
+}
+
+.container .row .output{
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex-flow: column;
+	gap: 15px;
+	padding: 30px 20px;
+	border: 1px solid rgba(255,255,255,.5);
+	box-shadow: 0 5px 15px rgba(0,0,0,.1);
+	border-radius: 20px;
+	text-align: center;
+	background-color: rgba(255,255,255,.2);
+}
+
+.container .row .output p{
+	font-size: 20px;
+	color: #334;
+}
+
+.container .row .output div{
+	font-size: 25px;
+	color: #019;
+}
+
+.container .row .form p{
+	font-size: 20px;
+	color: #334;
+}
+
+.container .row .form .input{
+	width: 100%;
+	background: none;
+	border-radius: 10px;
+	background: rgba(255,255,255,.2);
+	border: 1px solid rgba(0,0,0,.2);
+	font-size: 20px;
+	color: #334;
+	padding: 10px 15px;
+	margin-top: 10px;
+	margin-bottom: 20px;
+}
+
+.container .row .form .input::placeholder{
+	color: #555;
+	text-transform: none;
+}
+
+.container .row .form .tenure input[type="radio"]{
+	display: none;
+}
+
+.container .row .form .tenure{
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.container .row .form .tenure label{
+	font-size: 20px;
+	border-radius: 10px;
+	flex: 1;
+	background-color: rgba(0,0,0,.2);
+	border: 1px solid rgba(0,0,0,.2);
+	text-align: center;
+	color: #fff;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.container .row .form .tenure input[type="radio"]:checked + label{
+	background: rgba(0,0,200,.3);
+}
+
+.container .row .form .calculate{
+	width: 100%;
+	padding: 12px;
+	border-radius: 10px;
+	box-shadow: 0 5px 15px rgba(0,0,0,.1);
+	background: rgba(255,255,255,.3);
+	border: 1px solid rgba(0,0,0,.2);
+	font-size: 20px;
+	margin-top: 20px;
+	cursor: pointer;
+}
+
+.container .row .form .calculate:hover{
+	background-color: rgba(0,0,200,.3);
+	box-shadow: 0 5px 15px rgba(0,0,200,.3);
+	color: #fff;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+    <div class="row">
+
+        <div class="form box">
+            <p>loan amount (₹)</p>
+            <input type="number" placeholder="enter loan amount" id="amount" min="10000" max="10000000" maxlength="8" required class="input">
+            <p>interest rate (%)</p>
+            <input type="number" placeholder="enter interest rate" id="interest" min="1" max="99" maxlength="4" required step="0.01" class="input">
+            <p>loan tenure (yr/mo)</p>
+            <input type="number" placeholder="enter loan duration" id="loanTenure" min="1" max="360" maxlength="3" required class="input">
+            <div class="tenure">
+                <input type="radio" name="btn" id="year" checked>
+                <label for="year">yearly</label>
+                <input type="radio" name="btn" id="month">
+                <label for="month">monthly</label>
+            </div>
+            <button class="calculate" id="calculate">calculate</button>
+        </div>
+
+        <div class="box output">
+            <p>EMI</p>
+            <div id="emi"></div>
+            <p>total interest</p>
+            <div id="totalInterest"></div>
+            <p>total payment</p>
+            <div id="totalPayment"></div>
+        </div>
+
+    </div>
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="js/script.js"></script>    
+<script>
+document.querySelectorAll('input[type="number"]').forEach(inputNumber =>{
+   inputNumber.oninput = () =>{
+      if(inputNumber.value.length > inputNumber.maxLength) inputNumber.value = inputNumber.value.slice(0, inputNumber.maxLength);
+   };
+});
+
+let loanAmount = document.getElementById('amount');
+let loanInterest = document.getElementById('interest');
+let loanTenure = document.getElementById('loanTenure');
+let calculate = document.getElementById('calculate');
+
+calculate.onclick = (e) =>{
+   e.preventDefault();
+
+   let isYear = document.getElementById('year').checked;
+   let isMonth = document.getElementById('month').checked;
+   let noOfMonths = 0;
+
+   if(isMonth == '' && isYear == ''){
+      alert('Please select loan tenure type-> Month or year');
+   }else{
+
+      if(isYear==true){
+         noOfMonths = loanTenure.value * 12;
+      }else{
+         noOfMonths = loanTenure.value;
+      }
+
+      let r = parseFloat(loanInterest.value)/12/100;
+      let p = loanAmount.value;
+      let n = noOfMonths;
+
+      // formula EMI= (P * r * (1 + r)^n ) / ((1+r)^n - 1)
+
+      let emi = (p * r * Math.pow((1+r),n)) / (Math.pow((1+r),n) - 1 );
+      let totalInterest = (emi * n) - p;
+      let totalPayment = totalInterest + parseFloat(p);
+
+      document.getElementById('emi').innerHTML = '₹ ' + Math.round(emi);
+      document.getElementById('totalInterest').innerHTML = '₹ ' + Math.round(totalInterest);
+      document.getElementById('totalPayment').innerHTML = '₹ ' + Math.round(totalPayment);
+
+   }
+
+}
+
+</script>
+
+    
+</body>
+</html>
